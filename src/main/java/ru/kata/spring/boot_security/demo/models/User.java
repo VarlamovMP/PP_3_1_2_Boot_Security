@@ -39,14 +39,19 @@ public class User implements UserDetails {
         this.username = username;
         this.roles = roles;
     }
-    public User() {}
+
+    public User() {
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList());
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getPassword() {
         return password;
     }

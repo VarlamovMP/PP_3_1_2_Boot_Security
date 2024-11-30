@@ -20,6 +20,7 @@ public class Role implements GrantedAuthority {
 
     public Role() {
     }
+
     private String name;
 
     @Override

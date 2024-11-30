@@ -21,6 +21,7 @@ public class AdminController {
     private final RoleService roleService;
 
     private static final Logger LOGGER = Logger.getLogger(AdminController.class.getName());
+
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
@@ -46,7 +47,7 @@ public class AdminController {
     @PostMapping(value = "/update")
     public String updateUser(@RequestParam(value = "id") Long id, User user) {
         LOGGER.info("Updating user with id: " + id);
-        userService.updateUser(user,id);
+        userService.updateUser(user, id);
         return "redirect:/admin/";
     }
 
@@ -69,7 +70,8 @@ public class AdminController {
         LOGGER.info("Saving a new user");
         String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
         if (!user.getPassword().isBlank()) {
-            user.setPassword(encodedPassword);}
+            user.setPassword(encodedPassword);
+        }
         userService.saveUser(user);
         return "redirect:/admin/";
     }

@@ -19,17 +19,15 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
-
     @Autowired
     public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-
-
     public User findUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findUserByUsername(username);
     }
+
     @Query("Select u from User u left join fetch u.roles")
     public List<User> getListUsers() {
         return userRepository.findAll();
@@ -60,6 +58,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
             }
         }
     }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username);
