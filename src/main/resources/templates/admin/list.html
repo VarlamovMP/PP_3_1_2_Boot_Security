@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи</title>
+</head>
+<body>
+    <p>&nbsp; Все пользователи</p>
+    <table border="5">
+        <tbody>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Lastname</td>
+            <td>Age</td>
+            <td>Action</td>
+        </tr>
+        </tbody>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <tr th:each="user : ${list}">
+        <td th:text="${user.getId()}"></td>
+        <td th:text="${user.getName()}"></td>
+        <td th:text="${user.getLastname()}"></td>
+        <td th:text="${user.getAge()}"></td>
+        <td>
+            <a th:href="@{/admin/edit(id=${user.getId()})}">edit</a>
+            <a th:href="@{/admin/delete(id=${user.getId()})}">delete</a>
+        </td>
+    </tr>
+
+</table>
+<hr/>
+<a href="/admin/new">Create new user</a>
+<hr/>
+<a href="/logout">EXIT</a>
+</body>
+</html>
