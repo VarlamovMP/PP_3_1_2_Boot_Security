@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.security.core.userdetails.UserDetails;
+
 import ru.kata.spring.boot_security.demo.models.User;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface UserService {
     void deleteUser(Long id);
 
     public void updateUser(User user, Long id);
+
+    String encodePassword(String password);
 }
