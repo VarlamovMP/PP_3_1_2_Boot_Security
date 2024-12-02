@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,10 +76,10 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             // Если есть ошибки, верните пользователя обратно на форму создания
             return "admin/new_user";} // возвращает обратно на страницу создания пользователя
-//        String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
-//        if (!user.getPassword().isBlank()) {
-//            user.setPassword(encodedPassword);
-//        }
+        String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+        if (!user.getPassword().isBlank()) {
+            user.setPassword(encodedPassword);
+        }
         userService.saveUser(user);
         return "redirect:/admin/";
     }
