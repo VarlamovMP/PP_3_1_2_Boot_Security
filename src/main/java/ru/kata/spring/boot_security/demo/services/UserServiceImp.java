@@ -1,5 +1,4 @@
 package ru.kata.spring.boot_security.demo.services;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -29,14 +27,19 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     @Query("Select u from User u left join fetch u.roles")
+
+    @Override
     public List<User> getListUsers() {
         return userRepository.findAll();
     }
 
+    @Override
     public User findUser(Long id) {
         return userRepository.getById(id);
     }
 
+    @Transactional
+    @Override
     public void saveUser(User user) {
         if (!user.getName().isBlank() && !user.getLastname().isBlank() && !user.getUsername().isBlank() && !user.getPassword().isBlank() && (user.getAge() != 0)) {
             if (findUserByUsername(user.getUsername()) == null) {
@@ -45,6 +48,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
         }
     }
 
+    @Transactional
+    @Override
     public void updateUser(User user, Long id) {
         User updateUser = findUser(id);
         if (!user.getName().isBlank() && !user.getLastname().isBlank() && !user.getUsername().isBlank() && user.getAge() != 0) {
@@ -69,6 +74,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
                 user.getAuthorities());
     }
 
+    @Transactional
+    @Override
     public void deleteUser(Long id) {
         userRepository.delete(findUser(id));
     }
