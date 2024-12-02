@@ -1,15 +1,16 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 
+import javax.validation.Valid;
 import java.util.logging.Logger;
 
 @Controller
@@ -45,8 +46,11 @@ public class AdminController {
     }
 
     @PostMapping(value = "/update")
-    public String updateUser(@RequestParam(value = "id") Long id, User user) {
+    public String updateUser(@RequestParam(value = "id") Long id,  @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         LOGGER.info("Updating user with id: " + id);
+        if (bindingResult.hasErrors()) {
+            // Если есть ошибки, верните пользователя обратно на страницу редактирования
+            return "admin/update/";}
         userService.updateUser(user, id);
         return "redirect:/admin/";
     }
@@ -66,12 +70,15 @@ public class AdminController {
     }
 
     @PostMapping(value = "/save")
-    public String saveUser(@ModelAttribute("user") User user) {
+    public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         LOGGER.info("Saving a new user");
-        String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
-        if (!user.getPassword().isBlank()) {
-            user.setPassword(encodedPassword);
-        }
+        if (bindingResult.hasErrors()) {
+            // Если есть ошибки, верните пользователя обратно на форму создания
+            return "admin/new_user";} // возвращает обратно на страницу создания пользователя
+//        String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
+//        if (!user.getPassword().isBlank()) {
+//            user.setPassword(encodedPassword);
+//        }
         userService.saveUser(user);
         return "redirect:/admin/";
     }

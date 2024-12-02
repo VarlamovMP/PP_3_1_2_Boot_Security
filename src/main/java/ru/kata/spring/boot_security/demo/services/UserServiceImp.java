@@ -29,8 +29,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return userRepository.findUserByUsername(username);
     }
 
-//    @Query("Select u from User u left join fetch u.roles")
-
     @Override
     public List<User> getListUsers() {
         return userRepository.findAll();
@@ -43,17 +41,21 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Override
     public String encodePassword(String password) {
-        return bCryptPasswordEncoder.encode(password); // Реализация метода
+        return bCryptPasswordEncoder.encode(password);
+    }
+
+    private boolean validUser(User user) {
+        return !user.getName().isBlank() &&
+                !user.getLastname().isBlank() &&
+                !user.getUsername().isBlank() &&
+                !user.getPassword().isBlank() &&
+                user.getAge() != 0;
     }
 
     @Transactional
     @Override
     public void saveUser(User user) {
-        if (!user.getName().isBlank()
-                && !user.getLastname().isBlank()
-                && !user.getUsername().isBlank()
-                && !user.getPassword().isBlank()
-                && (user.getAge() != 0)) {
+        if (validUser(user)) {
             if (findUserByUsername(user.getUsername()) == null) {
                 user.setPassword(encodePassword(user.getPassword()));
                 userRepository.save(user);
@@ -65,21 +67,13 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     public void updateUser(User user, Long id) {
         User updateUser = findUser(id);
-        if (!user.getName().isBlank()
-                && !user.getLastname().isBlank()
-                && !user.getUsername().isBlank()
-                && user.getAge() != 0) {
+        if (validUser(updateUser)) {
             if (user.getPassword().isBlank()) {
                 user.setPassword(updateUser.getPassword());
                 userRepository.save(user);
             } else {
-
-//                String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
-//                user.setPassword(encodedPassword);
-//                userRepository.save(user);
-                user.setPassword(encodePassword(user.getPassword()));
+               // user.setPassword(encodePassword(user.getPassword()));
                 userRepository.save(user);
-
             }
         }
     }

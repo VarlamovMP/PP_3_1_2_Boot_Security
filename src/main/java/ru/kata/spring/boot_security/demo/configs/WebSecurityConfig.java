@@ -10,26 +10,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.services.UserService;
-
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-//    private UserService userService;
-//
-//    @Autowired
-//    public void setUserService(UserService userService) {
-//        this.userService = userService;
-//    }
-//
-//    public WebSecurityConfig(SuccessUserHandler successUserHandler) {
-//        this.successUserHandler = successUserHandler;
-//    }
-
-    private final UserDetailsService userService; // измените на final и добавьте @Autowired
+    private final UserDetailsService userService;
 
     @Autowired
     public WebSecurityConfig(SuccessUserHandler successUserHandler, @Lazy UserDetailsService userService) {
@@ -52,7 +38,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutSuccessUrl("/login")
                 .permitAll();
-
     }
 
     @Bean
@@ -64,8 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-        //authenticationProvider.setUserDetailsService((UserDetailsService) userService);
-        authenticationProvider.setUserDetailsService(userService); // Используем userService
+        authenticationProvider.setUserDetailsService(userService);
         return authenticationProvider;
     }
 }
