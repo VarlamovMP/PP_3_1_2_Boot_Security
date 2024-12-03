@@ -50,7 +50,6 @@ public class AdminController {
     public String updateUser(@RequestParam(value = "id") Long id,  @Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         LOGGER.info("Updating user with id: " + id);
         if (bindingResult.hasErrors()) {
-            // Если есть ошибки, верните пользователя обратно на страницу редактирования
             return "admin/update/";}
         userService.updateUser(user, id);
         return "redirect:/admin/";
@@ -74,8 +73,7 @@ public class AdminController {
     public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
         LOGGER.info("Saving a new user");
         if (bindingResult.hasErrors()) {
-            // Если есть ошибки, верните пользователя обратно на форму создания
-            return "admin/new_user";} // возвращает обратно на страницу создания пользователя
+           return "admin/new_user";}
         String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
         if (!user.getPassword().isBlank()) {
             user.setPassword(encodedPassword);

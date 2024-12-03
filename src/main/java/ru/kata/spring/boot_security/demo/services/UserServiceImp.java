@@ -29,6 +29,14 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return userRepository.findUserByUsername(username);
     }
 
+    private boolean validUser(User user) {
+        return !user.getName().isBlank() &&
+                !user.getLastname().isBlank() &&
+                !user.getUsername().isBlank() &&
+                !user.getPassword().isBlank() &&
+                user.getAge() != 0;
+    }
+
     @Override
     public List<User> getListUsers() {
         return userRepository.findAll();
@@ -42,14 +50,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     public String encodePassword(String password) {
         return bCryptPasswordEncoder.encode(password);
-    }
-
-    private boolean validUser(User user) {
-        return !user.getName().isBlank() &&
-                !user.getLastname().isBlank() &&
-                !user.getUsername().isBlank() &&
-                !user.getPassword().isBlank() &&
-                user.getAge() != 0;
     }
 
     @Transactional
@@ -72,7 +72,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
                 user.setPassword(updateUser.getPassword());
                 userRepository.save(user);
             } else {
-               // user.setPassword(encodePassword(user.getPassword()));
+                user.setPassword(encodePassword(user.getPassword()));
                 userRepository.save(user);
             }
         }
